@@ -20,7 +20,7 @@ export function Navbar() {
   const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const { count, open: openCart, addedTick } = useCart();
+  const { shownCount: count, open: openCart, addedTick, flights } = useCart();
 
   // Tuck away while reading downwards, return as soon as the reader scrolls up.
   useMotionValueEvent(scrollY, "change", (v) => {
@@ -36,11 +36,11 @@ export function Navbar() {
     setHidden(false);
   }, [pathname]);
 
-  // Bring the bar back whenever something is added, so the bag count is seen to change.
+  // Bring the bar back as soon as a jar takes off (and again when it lands), so it has somewhere to fly to.
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- reveal on add
-    if (addedTick) setHidden(false);
-  }, [addedTick]);
+    if (addedTick || flights.length) setHidden(false);
+  }, [addedTick, flights.length]);
 
   return (
     <>
@@ -48,6 +48,7 @@ export function Navbar() {
         initial={{ y: "-150%" }}
         animate={{ y: ready && (!hidden || menuOpen) ? "0%" : "-150%" }}
         transition={{ duration: 0.7, ease: easeSoft }}
+        id="site-header"
         className="fixed inset-x-0 top-3 z-50 sm:top-4"
       >
         <nav
@@ -100,8 +101,9 @@ export function Navbar() {
                 key={addedTick}
                 type="button"
                 initial={false}
-                animate={addedTick ? { scale: [1, 1.12, 1], rotate: [0, -4, 3, 0] } : undefined}
-                transition={{ duration: 0.55, ease: easeSoft }}
+                id="bag-target"
+                animate={addedTick ? { scale: [1, 1.22, 0.94, 1.04, 1], rotate: [0, -8, 6, -3, 0] } : undefined}
+                transition={{ duration: 0.6, ease: easeSoft }}
                 className="flex h-10 items-center gap-2 rounded-full bg-jam pl-3.5 pr-1 font-semibold text-cream transition-colors hover:bg-jam-deep"
                 aria-label={`Open shopping bag, ${count} ${count === 1 ? "item" : "items"}`}
                 onClick={openCart}

@@ -19,7 +19,7 @@ import { useIntroReady } from "./IntroContext";
 import { Sticker, Stars } from "./ui/Sticker";
 import { RevealText, easeExpo, easeSoft } from "./ui/motion";
 
-const AUTOPLAY = 5;
+const AUTOPLAY = 2;
 
 /** Full-screen flavour stage: colour, jar and giant word all change together. */
 export function Hero() {
@@ -29,6 +29,7 @@ export function Hero() {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [added, setAdded] = useState(false);
+  const jarRef = useRef<HTMLDivElement>(null);
   const product = products[index];
   const word = product.name.split(" ")[0].toUpperCase();
 
@@ -52,7 +53,7 @@ export function Hero() {
   const wordY = useTransform(scrollYProgress, [0, 1], ["0%", reduce ? "0%" : "-30%"]);
 
   const onAdd = () => {
-    add(product.slug);
+    add(product.slug, 1, jarRef.current);
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1500);
   };
@@ -153,7 +154,7 @@ export function Hero() {
             {/* soft glow disc behind the jar */}
             <div aria-hidden className="absolute inset-x-[4%] top-[8%] aspect-square rounded-full bg-current opacity-[0.08]" />
 
-            <motion.div style={{ rotate: rot, x: shiftX, y: shiftY }} className="relative aspect-[4/5]">
+            <motion.div ref={jarRef} style={{ rotate: rot, x: shiftX, y: shiftY }} className="relative aspect-[4/5]">
               {/* gentle idle bob */}
               <motion.div
                 className="absolute inset-0"

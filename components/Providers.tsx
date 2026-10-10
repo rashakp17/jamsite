@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import { MotionConfig } from "motion/react";
 import { CartProvider } from "./cart/CartContext";
 import { CartDrawer } from "./cart/CartDrawer";
+import { FlyToBag } from "./cart/FlyToBag";
 import { Cursor } from "./Cursor";
 import { IntroContext } from "./IntroContext";
 import { Preloader } from "./Preloader";
@@ -19,6 +20,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <CartProvider>
           <SmoothScroll />
           {children}
+          <FlyToBag />
           <CartDrawer />
           <Preloader onDone={onIntroDone} />
           <Cursor />

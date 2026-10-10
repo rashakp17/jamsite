@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { ArrowLeft, Check, Leaf, Minus, Plus, Truck, Gift } from "lucide-react";
 import { formatPrice, type Product } from "@/lib/products";
@@ -61,6 +61,7 @@ export function ProductDetail({ product }: { product: Product }) {
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
   const [view, setView] = useState<"jar" | "life">("jar");
+  const jarRef = useRef<HTMLDivElement>(null);
   const { bold, on } = product.palette;
   const secondary = secondaryImages[product.slug] ?? { src: "/images/berry-flatlay.webp", alt: "Fresh fruit" };
 
@@ -77,7 +78,7 @@ export function ProductDetail({ product }: { product: Product }) {
   });
 
   const onAdd = () => {
-    add(product.slug, qty);
+    add(product.slug, qty, jarRef.current);
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1800);
   };
@@ -114,7 +115,7 @@ export function ProductDetail({ product }: { product: Product }) {
                   animate={ready ? { y: 0, opacity: 1 } : undefined}
                   transition={{ type: "spring", stiffness: 70, damping: 14, delay: 0.2 }}
                 >
-                  <motion.div style={{ rotate: rot, y: shiftY }} className="relative aspect-[4/5]">
+                  <motion.div ref={jarRef} style={{ rotate: rot, y: shiftY }} className="relative aspect-[4/5]">
                     <AnimatePresence mode="popLayout" initial={false}>
                       {view === "jar" ? (
                         <motion.div

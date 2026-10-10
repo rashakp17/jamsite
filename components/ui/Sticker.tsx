@@ -30,7 +30,7 @@ export function Sticker({ text, className = "", bg = "var(--color-butter)", fg =
           </text>
         </g>
       </motion.svg>
-      <span className="relative">{children}</span>
+      <span className="relative flex flex-col items-center text-center leading-none">{children}</span>
     </div>
   );
 }

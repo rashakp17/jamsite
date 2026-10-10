@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Check, Plus } from "lucide-react";
 import { formatPrice, products } from "@/lib/products";
 import { useCart } from "./cart/CartContext";
@@ -14,9 +14,10 @@ const includes = ["All four jams", "Wooden spreader", "Recipe card", "Handwritte
 export function BreakfastBox() {
   const { add } = useCart();
   const [added, setAdded] = useState(false);
+  const boxRef = useRef<HTMLDivElement>(null);
 
   const addAll = () => {
-    products.forEach((p) => add(p.slug));
+    products.forEach((p, i) => add(p.slug, 1, boxRef.current, i * 0.14));
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1800);
   };
@@ -25,7 +26,7 @@ export function BreakfastBox() {
     <section aria-labelledby="box-heading" className="px-3 py-6 sm:px-4">
       <div className="relative overflow-hidden rounded-[2.5rem] bg-plum py-14 text-cream sm:rounded-[3rem] sm:py-20">
         <div className="container-page grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          <div className="relative">
+          <div ref={boxRef} className="relative">
             <MaskImage
               src="/images/breakfast-box.jpg"
               alt="The Breakfast Box gift set with four jars and a wooden spreader"

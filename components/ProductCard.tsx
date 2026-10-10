@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Check, Plus } from "lucide-react";
 import { formatPrice, type Product } from "@/lib/products";
@@ -12,10 +12,11 @@ import { useCart } from "./cart/CartContext";
 export function ProductCard({ product, className = "", sizes }: { product: Product; className?: string; sizes?: string }) {
   const { add } = useCart();
   const [added, setAdded] = useState(false);
+  const jarRef = useRef<HTMLDivElement>(null);
   const { bold, on } = product.palette;
 
   const onAdd = () => {
-    add(product.slug);
+    add(product.slug, 1, jarRef.current);
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1500);
   };
@@ -53,6 +54,7 @@ export function ProductCard({ product, className = "", sizes }: { product: Produ
           transition={{ type: "spring", stiffness: 200, damping: 18 }}
         />
         <motion.div
+          ref={jarRef}
           className="absolute inset-[4%]"
           variants={{ rest: { y: 0, rotate: 0, scale: 1 }, hover: { y: -16, rotate: 5, scale: 1.06 } }}
           transition={{ type: "spring", stiffness: 220, damping: 14 }}
